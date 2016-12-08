@@ -1,0 +1,7 @@
+{
+    "require": {
+      "imagine/imagine":"dev-master",
+      "crada/phalcon-user-plugin": "2.0",
+      "phalcon/devtools": "^2.0"
+    }
+}

@@ -1,0 +1,40 @@
+<!--After fields present-->
+                  <?php if (isset($aTable['options']['has_tags'])) {?>
+                  <div class="form-group" data-tags="tags">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                           for="fieldTags">
+                      <?=Hl::$t->_('Tags')?>
+                    </label>
+                    <div class="col-md-5 col-sm-3 col-xs-10">
+                      <?php
+                        $aOptions = ['tags'];
+                        if (isset($aItem)) {
+                          $aSelectValues =
+                            Tags::byObj($aItem['id'],
+                              isset($aItem['attr_id'])
+                                ?$aItem['attr_id']
+                                :$aTable['options']['attr_id']);
+                          if ($aSelectValues)
+                            $aOptions["value"] =
+                              implode(',',Hl::q2sel($aSelectValues,'name'.Hl::$pstfx));
+                        }
+                        $aOptions["id"] = "fieldTags";
+                        $aOptions["class"] = "tags form-control col-md-5 col-xs-10";
+
+                        echo $this->tag->textField($aOptions);
+                      ?>
+                      <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">+ <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                          <?php
+                          foreach (Tags::find()->toArray() as $tv) {
+                            echo '<li onclick="tagClick(this)"'.
+                              '>'.$tv['name'.Hl::$pstfx].'</li>';
+                          } ?>
+                          <!--li class="divider"></li-->
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <?php } ?>

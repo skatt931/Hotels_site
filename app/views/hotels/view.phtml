@@ -1,0 +1,516 @@
+<body>
+<div class="wrapper wrapp booking_page" id="wrapper">
+  <?php include(__DIR__ . "/../common/sidebar_menu.php"); ?>
+  <header>
+    <div class="container">
+      <?php include(__DIR__ . "/../common/header.php"); ?>
+    </div>
+  </header>
+  <section class="main_content">
+    <div class="container">
+      <div class="modal fade" id="modalBooking" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span></button>
+              <h4 class="modal-title"></h4>
+            </div>
+          </div>
+        </div>
+      </div>
+      <?php include(__DIR__ . "/../common/search_form.php"); ?>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="back-to-result pull-left">
+            <i class="fa fa-long-arrow-left" aria-hidden="true"></i>
+            До результатів пошуку
+          </div>
+        </div>
+        <a id="hotel_id" style="display: none"><?= $hotel['id'] ?></a>
+        <a id="page_id" style="display: none">hotels</a>
+        <div class="col-md-9">
+          <?php
+          $aBreadCrumbs[0] = ['url' => Hl::url('hotels/' . $hotel['id']),
+            'name' => $hotel['name' . Hl::$pstfx]];
+          include(__DIR__ . "/../common/breadcrumbs.php"); ?>
+        </div>
+      </div>
+
+    </div>
+  </section>
+  <div class="container">
+    <section class="reserve clearfix">
+      <div class="col-lg-9">
+        <div class="row">
+          <div class="col-md-9">
+            <h3><?= $hotel['name' . Hl::$pstfx] ?>
+              <span class="group-star pull-right">
+                              <?= Hl::stars($hotel['stars']) ?>
+                            </span>
+            </h3>
+            <address class="clearfix">
+              <?php
+              $url = '';
+              if ($aLocation) {
+                $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" . $aLocation['latitude'] . ","
+                  . $aLocation['longitude'] . "&sensor=true&language=uk";
+                //$rsp = json_decode(file_get_contents($url));
+                echo '<i class="fa fa-map-marker" aria-hidden="true"></i>';
+              }
+              ?>
+              <p class="col-md-10">
+                <?php
+                echo '<a id="googleUrl" href="'.$url.'" style="display:none"></a>';
+                echo '<i id="googleInfo" style="display:none"></i>';
+
+                //echo (count($rsp->results) > 0) ? $rsp->results[0]->formatted_address : ''
+                if ($aAttributes) {
+                  echo Hl::aSafe($aAttributes, [6810, 'val' . Hl::$pstfx], false);
+                  $sDist = '';
+                  $bFirst = true;
+                  foreach ($aAttributes as $ka => $va) {
+                    if ($aAttrs[$ka]['parent_id'] == 9000)
+                      if ($sDist = Hl::aSafe($aAttributes, [9005, 'val' . Hl::$pstfx])) {
+                        if ($bFirst) {
+                          $bFirst = false;
+                          echo '<br>';
+                        } else
+                          echo ' | ';
+
+                        echo $sDist . ' ' . Hl::aSafe($aAttrs, [$ka, 'name']);
+                      }
+                  }
+                }
+                ?>
+                <!--<br> 0.1 km до бювету | 0.15 km до центру-->
+              </p>
+            </address>
+          </div>
+          <div class="col-md-3">
+            <form class="multy-select">
+              <p>
+                <label>
+                  <select class="hide"
+                          id="standart-reserve"
+                          name="example"
+                          multiple="multiple">
+                    <?php foreach ($aRooms as $r) {
+                      echo '<option value="' . $r['id'] . '">' . $r['name' . Hl::$pstfx] .
+                        '</option>';
+                    } ?>
+                  </select>
+                </label>
+              </p>
+              <p>
+                <label>
+                  <select class="hide" id="option-reserve"
+                          name="example"
+                          multiple="multiple">
+                    <?php
+                    foreach ($aAttributes as $a)
+                      if ($a['parent_id'] == 6000)
+                        echo '<option value="' . $a['attr_id'] .
+                          '">' . $a['name' . Hl::$pstfx] . '</option>';
+                    ?>
+                  </select>
+                </label>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-lg-3 pull-right text-right">
+        <div class="wr-button-reserve">
+          <p><i>24 000</i> <span>грн</span></p>
+          <a href="#"
+             class="btn btn-default book text-center center-block"
+             data-toggle="modal"
+             data-target="#myModal"><?= Hl::$t->_('Book') ?></a>
+        </div>
+        <div class="like text-center">
+          чудово <span class="percent">99%</span> <i
+            class="fa fa-thumbs-up" aria-hidden="true"></i>
+        </div>
+      </div>
+    </section>
+  </div>
+  <section class="about-hotel">
+    <div class="container">
+      <div class="col-md-10 padding_null">
+        <div class="snippet">
+          <div class="row">
+            <div class="col-md-3">
+              <div id="wrFixedSidebar">
+                <ul id="fixedSidebar">
+                  <?php
+                  $bActive = true;
+                  foreach ([6900, 'rooms', 6910, 6920, 6930,] as $numb) {
+                    if ($numb != 'rooms') {
+                      if (isset($aDescriptions[$numb])) {
+                        ?>
+                        <li class="sidebar-header<?= $bActive ? ' active' : '' ?>">
+                          <a href="#anchor_<?= $numb ?>">
+                            <?= Hl::aSafe($aAttrs, [$numb, 'name']) ?></a>
+                        </li>
+                        <?php
+                        $bActive = false;
+                      }
+                    } else
+                      if ($aRooms) { ?>
+                        <li class="sidebar-header">
+                          <a href="#roomsAndPrice">
+                            <?= Hl::$t->_('Rooms') . ' / ' . Hl::$t->_('Prices') ?>
+                          </a>
+                          <ul>
+                            <?php foreach ($aRooms as $r) {
+                              echo '<li class="sidebar-inner"><a href="#room_' .
+                                $r['id'] . '">' .
+                                $r['name' . Hl::$pstfx] . '</a></li>' . "\n";
+                            } ?>
+                          </ul>
+                        </li>
+                      <?php }
+                  }
+                  ?>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-9">
+              <div id="tabs">
+                <ul>
+                  <li><a href="#tabs-1"><?= Hl::$t->_('Gallery') ?></a></li>
+                  <li><a href="#tabs-2"><?= Hl::$t->_('Location') ?></a></li>
+                </ul>
+                <div id="tabs-1">
+                  <div id="hotelGallery"></div>
+                </div>
+                <div id="tabs-2">
+                  <?php if ($aLocation): ?>
+                    <iframe width="100%" height="600" src="http://maps.google.com/maps?q=<?= $aLocation['latitude'] ?>,<?= $aLocation['longitude'] ?>&z=15&output=embed&language=uk"></iframe>
+                  <?php endif; ?>
+                </div>
+              </div>
+              <?php /*if (isset($aDescriptions[6900])) { */ ?>
+              <p class="description-hotel" id="anchor_6900">
+                <?= $aDescriptions[6900]['note' . Hl::$pstfx] ?>
+              </p>
+              <?php /*} */ ?>
+              <?php if ($aRooms) { ?>
+                <!--<div id="hotelRooms"></div>-->
+                <div class="numbers-price" id="roomsAndPrice">
+                  <h3 class="text-center numbers-and-price">
+                    <?= Hl::$t->_('Rooms') . ' / ' . Hl::$t->_('Prices') ?>
+                  </h3>
+                  <ul class="list-rooms">
+                    <?php foreach ($aRooms as $r) {
+                      if (isset($selectedRoom) && $r['id'] == $selectedRoom)
+                        $backColor = 'style="background-color: gainsboro;"';
+                      else
+                        $backColor = '';
+                      ?>
+                      <li class="list-room-item" id="room_<?= $r['id'] ?>" data-price="<?= $r['price'] ?>"
+                        <?= $backColor ?>>
+                        <div class="list-room-inner">
+                          <div class="room-info">
+                            <form>
+                              <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                  <div class="room-info-center">
+                                    <div class="room-item-wr-img">
+                                      <?php
+                                      if (strlen($r['picture']) > 0)
+                                        echo '<img class="room-item-img"' .
+                                          ' src="' . Pictures::pictSizeN($r['picture'], 95) .
+                                          '" alt="">'; ?>
+                                    </div>
+                                    <h4 class="room-item-header"><?= $r['name' . Hl::$pstfx] ?></h4>
+                                    <p class="room-item-info">
+                                      <?= $r['note' . Hl::$pstfx] ?>
+                                    </p>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    <?php
+                                    if ($aAttributes) {
+                                      echo '<fieldset class="group-radio-conditions">'.
+                                           '<ul class="list-services clearfix">';
+                                      foreach ($aAttributes as $ka=>$a)
+                                        if ($a['parent_id'] == 6000) {
+                                          $aA = explode(' ', $a['name' . Hl::$pstfx]);
+                                          $aMain = $aA[0];
+                                          unset($aA[0]);
+                                          echo '<li>
+                                                 <input type="radio" id="f-option_'.
+                                            $r['id'].'_'.$ka.'" name="selector">'.
+                                            '<label for="f-option_'.$r['id'].'_'.$ka.'">'.
+                                            '<span>' . $aMain . '</span> ' .
+                                            '<small>' .implode(' ', $aA) .
+                                            '</small></label>
+                                            <div class="check"></div>
+                                            </li>';
+                                        }
+                                      echo '</ul></fieldset>';
+                                    }
+                                    ?>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                  <?php if ($r['adult'] > 1 || $r['child'] > 0) { ?>
+                                    <fieldset class="group-guests pull-right">
+                                    <?php if ($r['adult'] > 1) { ?>
+                                      <div
+                                        class="form-group">
+                                        <label><?= Hl::$t->_('Adult') ?>
+                                          <select
+                                            class="form-control guest_number pull-right">
+                                            <?php for ($i = 1; $i <= $r['adult']; $i++) {
+                                              echo '<option>' . $i . '</option>';
+                                            } ?>
+                                          </select>
+                                        </label>
+                                      </div>
+                                    <?php } ?>
+                                    <?php if ($r['child'] > 0) { ?>
+                                      <div
+                                        class="form-group">
+                                        <label><?= Hl::$t->_('Child') ?>
+                                          <select
+                                            class="form-control guest_number pull-right">
+                                            <?php for ($i = 0; $i <= $r['child']; $i++) {
+                                              echo '<option>' . $i . '</option>';
+                                            } ?>
+                                          </select>
+                                        </label>
+                                      </div>
+                                      </fieldset>
+                                    <?php } ?>
+                                  <?php } ?>
+                                </div>
+                                <div class="col-md-6 col-md-offset-2">
+                                  <div class="add_purpose">
+                                    <?php
+                                    $sAddPurpose = '';
+                                    if ($aAttributes) {
+                                      foreach ($aAttributes as $a)
+                                        if ($a['parent_id'] == 8000) {
+                                          $sAddPurpose .= "\n" .
+                                            '<option value="' . $a['attr_id'] . '"' .
+                                            ($a['val'] > 0 ? (' data-price="' . $a['val'] . '"') : '') .
+                                            '>' .
+                                            $a['name' . Hl::$pstfx] .
+                                            ($a['val'] > 0 ? (' (' . $a['val'] . ')') : '') .
+                                            '</option>';
+                                        }
+                                      if ($sAddPurpose != '') { ?>
+                                        <form class="form-group multy-select">
+                                          <p>
+                                            <label><?= Hl::aSafe($aAttrs, [8000, 'name']) ?>
+                                              <select class="hide" id="additionalService_<?= $r['id'] ?>"
+                                                name="example" multiple="multiple"
+                                                onchange="addiChanged(this)">
+                                                <?= $sAddPurpose ?>
+                                              </select>
+                                            </label>
+                                          </p>
+                                        </form>
+                                      <?php }
+                                    } ?>
+                                  </div>
+                                </div>
+                              </div>
+                            </form>
+
+                          </div>
+                        </div>
+
+                        <div id="RangeCalendar_<?= $r['id'] ?>"></div>
+
+                        <div class="final-book">
+                          <div class="row">
+                            <div
+                              class="col-md-3 col-sm-3 col-xs-6">
+                              <div
+                                class="form-group">
+                                <label><?= Hl::$t->_('Rooms') . ' ' . Hl::$t->_('count') ?>
+                                  <select
+                                    class="form-control guest_number main-selector"
+                                  onchange="guestChanged(this)">
+                                    <?php
+                                    if ($r['cnt'] > 0)
+                                      $iRooms = $r['cnt'];
+                                    else
+                                      $iRooms = 5;
+                                    for ($i = 0; $i <= $iRooms; $i++) {
+                                      echo '<option>' . ($i) . '</option>';
+                                    } ?>
+                                  </select>
+                                </label>
+                              </div>
+                            </div>
+                            <div
+                              class="col-md-5 col-sm-5 col-xs-6">
+                              <div
+                                class="total-price">
+                                <p class="money"><?= Hl::$t->_('Total') ?>
+                                  :
+                                  <span><?= $r['price'] ?> </span>грн.
+                                </p>
+                                <p class="for-who">
+                                  <?= Hl::$t->_('for') . ' ' . $r['adult'] . ' ' .
+                                  Hl::$t->_('adult') . ' ' .
+                                  (($r['child'] > 0) ?
+                                    (Hl::$t->_('and') . ' ' .
+                                      $r['child'] . ' ' . Hl::$t->_('child')) : '')
+                                  ?>
+                                </p>
+                                <p class="from-to">з <span class="fromDate">15.02.2016</span> до <span class="toDate">17.02.16</span>
+                                </p>
+                                <?php
+                                if (isset($aBooking))
+                                  if ($aBooking) {
+                                    $sBook = '';
+                                    foreach ($aBooking as $b) {
+                                      if ($b['room_id'] == $r['id']) {
+                                        $sBook .= "\n";
+                                        $sBook .= Hl::$t->_('from') . ' ' .
+                                          Hl::df($b['date_f']) . ' ' .
+                                          Hl::$t->_('till') .
+                                          ' ' . Hl::df($b['date_e']);
+                                      }
+                                    }
+                                    if ($sBook != '')
+                                      echo '<p>' . Hl::$t->_('Booked') .
+                                        $sBook . '</p>';
+                                  }
+                                ?>
+                              </div>
+                            </div>
+                            <div
+                              class="col-md-4 col-sm-4 col-xs-12">
+                              <div
+                                class="btn-book">
+                                <button
+                                  class="button-book text-center"
+                                  onclick="bookIt(this)"
+                                  data-toggle="modal"
+                                  data-target="#myModal">
+                                  <?= Hl::$t->_('Book') ?>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    <?php } ?>
+                  </ul>
+                </div>
+              <?php }
+              foreach ([6910, 6920, 6930,] as $numb) {
+                if (isset($aDescriptions[$numb]))
+                echo '<section class="amenities-block">'.
+                  '<h3 id="anchor_'.$numb.'">'.
+                  Hl::aSafe($aAttrs, [$numb, 'name']).'</h3>'.
+                  '<p>'.$aDescriptions[$numb]['note'.Hl::$pstfx].'</p></section>';
+              }
+              ?>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2 clearfix">
+        <?php include(__DIR__ . "/../common/actions_right.php"); ?>
+        <?php include(__DIR__ . "/../common/news_right.php"); ?>
+      </div>
+    </div>
+  </section>
+  <section class="similar-offers">
+    <div class="container">
+      <div class="col-md-12">
+        <h3 class="blog_title"><?= Hl::$t->_('Same') ?>:</h3>
+        <div id="similarOffers" class="owl-carousel owl-theme">
+          <?php include(__DIR__ . "/../common/brick_same.php"); ?>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Modal -->
+  <?php include(__DIR__ . '/../common/book.php'); ?>
+</div>
+<footer>
+  <?php include(__DIR__ . '/../common/footer.php'); ?>
+</footer>
+<?php include(__DIR__ . '/../common/footer_js.php'); ?>
+
+<script type="text/javascript">
+  $('#similarOffers').owlCarousel({
+    loop: false,
+    margin: 36,
+    nav: true,
+    dots: false,
+    navText: ["", ""],
+    responsive: {
+      0: {
+        items: 1,
+        nav: false
+      },
+      600: {
+        items: 3
+      },
+      1000: {
+        items: 4
+      }
+    }
+  });
+
+  //if (typeof ajaxIt === "function") {
+  $(window).on('load', function () {
+    var sGoogleUrl = $('#googleUrl').attr('href');
+      ajaxIt(sGoogleUrl,undefined,updateGoogle);
+  });
+
+  $(window).on('load scroll', function () {
+    let $wrap = $('#wrFixedSidebar'),
+      $accordion = $('#fixedSidebar'),
+      $snippet = $('.snippet'),
+      elPos = $wrap.offset().top,
+      heightBlock = $snippet.offset().top + $snippet.height() - $accordion.height(),
+      paddingSnippetTB = parseInt($snippet.css('padding-top'), 10) + parseInt($snippet.css('padding-bottom'), 10),
+      bottomAccordion = $snippet.height() - $accordion.height() - paddingSnippetTB;
+
+    if ($(window).width() < 1366) return false;
+
+    if ($(window).scrollTop() >= elPos && $(window).scrollTop() < heightBlock) {
+      $accordion
+        .addClass('fixedSidebarScroll')
+        .removeClass('fixedSidebar')
+        .css({
+          top: 10,
+          width: $wrap.width()
+        })
+    } else if ($(window).scrollTop() >= heightBlock) {
+      $accordion
+        .removeClass('fixedSidebarScroll')
+        .addClass('fixedSidebar')
+        .css({
+          top: bottomAccordion
+        });
+    } else {
+      $accordion
+        .removeClass('fixedSidebar')
+        .removeClass('fixedSidebarScroll')
+        .css({
+          top: 0
+        })
+    }
+  });
+</script>
+<a id="pictures" style="display:none">
+  <?php
+  $sABody = '';
+  foreach ($aPictures as $p)
+    $sABody .= ',' . $p['path'];
+  echo substr($sABody, 1);
+  ?>
+</a>
+<div id="roomsLocation" style="display: none;"></div>
+</body>

@@ -1,0 +1,57 @@
+<?php include(__DIR__."/../common/doctype.php"); ?>
+<head>
+  <?php include(__DIR__."/../common/head.php"); ?>
+</head>
+<body>
+<div class="wrapp product_category">
+  <header>
+    <div class="container">
+        <?php include(__DIR__."/../common/header.php"); ?>
+    </div>
+  </header>
+  <section class="main_content">
+    <div class="container">
+      <?php
+        echo $this->getContent();
+        echo $this->flashSession->output();
+
+        echo $this->tag->form(
+          array(
+            Hl::url('user/save'),
+            "autocomplete" => "off",
+          )
+        );
+        // Проходимо полями форми
+        foreach ($form as $element) {
+          $elName = $element->getName();
+          if (substr(get_class($element),-6,6) != 'Submit')
+            $element->setDefault($user[$elName]);
+          // Собираем все сгенерированные сообщения для текущего элемента
+          $messages = $form->getMessagesFor($elName);
+
+          if (count($messages)) {
+            // Виводимо кожен елемент
+            echo '<div class="messages">';
+            foreach ($messages as $message) {
+              echo $message;
+            }
+            echo '</div>';
+          }
+
+          echo '<p>';
+          echo '<label for="', $elName, '">', $element->getLabel(), '</label>';
+          echo $element;
+          echo '</p>';
+
+        }
+        echo $this->tag->endForm();
+      ?>
+    </div>
+  </section>
+
+</div>
+<footer>
+  <?php include(__DIR__.'/../common/footer.php'); ?>
+</footer>
+<?php include(__DIR__.'/../common/footer_js.php'); ?>
+</body>

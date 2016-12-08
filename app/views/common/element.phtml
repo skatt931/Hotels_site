@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-sm-12">
+    <?php
+      if (is_array($aItem)) {
+        foreach ($aItem as $item): ?>
+          <tr>
+            <?php
+            print_r($item);
+            ?>
+          </tr>
+        <?php endforeach;
+      }
+      else
+        echo 'No items found';
+    ?>
+  </div>
+</div>

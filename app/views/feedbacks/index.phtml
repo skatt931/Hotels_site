@@ -1,0 +1,91 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+?>
+
+<div class="page-header">
+    <h1>
+        Search feedbacks
+    </h1>
+    <p>
+        <?php echo $this->tag->linkTo(array("feedbacks/new", "Create feedbacks")) ?>
+    </p>
+</div>
+
+<?php echo $this->getContent() ?>
+
+<?php
+    echo $this->tag->form(
+        array(
+            "feedbacks/search",
+            "autocomplete" => "off",
+            "class" => "form-horizontal"
+        )
+    );
+?>
+
+<div class="form-group">
+    <label for="fieldId" class="col-sm-2 control-label">Id</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("id", "type" => "number", "class" => "form-control", "id" => "fieldId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldUserId" class="col-sm-2 control-label">User</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("user_id", "type" => "number", "class" => "form-control", "id" => "fieldUserId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldAttrId" class="col-sm-2 control-label">Attr</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("attr_id", "type" => "number", "class" => "form-control", "id" => "fieldAttrId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldObjId" class="col-sm-2 control-label">Obj</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("obj_id", "type" => "number", "class" => "form-control", "id" => "fieldObjId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldNote" class="col-sm-2 control-label">Note</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textArea(array("note", "cols" => 30, "rows" => 4, "class" => "form-control", "id" => "fieldNote")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldNoteUk" class="col-sm-2 control-label">Note Of Uk</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textArea(array("note_uk", "cols" => 30, "rows" => 4, "class" => "form-control", "id" => "fieldNoteUk")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldLikeit" class="col-sm-2 control-label">Likeit</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("likeit", "type" => "number", "class" => "form-control", "id" => "fieldLikeit")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldCreated" class="col-sm-2 control-label">Created</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("created", "size" => 30, "class" => "form-control", "id" => "fieldCreated")) ?>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <?php echo $this->tag->submitButton(array("Search", "class" => "btn btn-default")) ?>
+    </div>
+</div>
+
+<?php echo $this->tag->endForm(); ?>

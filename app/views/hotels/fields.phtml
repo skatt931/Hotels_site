@@ -1,0 +1,22 @@
+<?php
+  foreach (Hotels::fields() as $kf=>$vf) {
+    $aParams = array($kf, "class" => "form-control", "id" => "field" . ucfirst($kf) . '"');
+    if (isset($vf['size']))
+      $aParams['size'] = $vf['size'];
+    if (isset($items[$kf]))
+      $aParams['value'] = $items[$kf];
+    if (!isset($vf['hidden'])) {
+      ?>
+      <div class="form-group">
+        <label for="field"<?= ucfirst($kf)?> class="col-sm-2 control-label"><?= $vf['label'] ?></label>
+        <div class="col-sm-10">
+          <?php
+          echo $this->tag->textField($aParams);
+          ?>
+        </div>
+      </div>
+    <?php } else {
+      echo $this->tag->hiddenField($aParams);
+    }
+  }
+?>

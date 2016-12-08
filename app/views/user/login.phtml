@@ -1,0 +1,49 @@
+<?php include(__DIR__."/../common/doctype.php"); ?>
+<head>
+  <?php include(__DIR__."/../common/head.php"); ?>
+</head>
+<body>
+<div class="wrapp product_category">
+  <header>
+    <div class="container">
+        <?php include(__DIR__."/../common/header.php"); ?>
+    </div>
+  </header>
+  <section class="main_content">
+    <div class="animate form login_form">
+    <section class="login_content">
+      <div class="container">
+      <?php
+        echo $this->getContent();
+        echo $this->flashSession->output();
+
+        echo $this->tag->form(
+          array(
+            "login",
+            "autocomplete" => "off",
+            //"class" => "form-horizontal"
+          )
+        );
+        echo '<h1>'.Hl::$t->_('Login').'</h1>';
+        echo $form->render('csrf');
+        echo '<div>'.$form->render('email').'</div>';
+        echo '<div>'.$form->render('password').'</div>';
+        echo '<div>'.$form->render('remember').
+          '<label for="remember">'.Hl::$t->_('Remember me').'</label>'.
+          '</div>';
+        echo $form->render('go');
+        echo $this->tag->endForm();
+      //<a class="to_register" href="<?= Hl::url('register') "><?= Hl::$t->_('Register')</a>
+      ?>
+      <a class="reset_pass" href="<?= Hl::url('restore') ?>"><?= Hl::$t->_('Forgot password')?></a>
+      </div>
+    </section>
+    </div>
+  </section>
+
+</div>
+<footer>
+  <?php include(__DIR__.'/../common/footer.php'); ?>
+</footer>
+<?php include(__DIR__.'/../common/footer_js.php'); ?>
+</body>

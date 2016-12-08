@@ -1,0 +1,365 @@
+<body>
+<div class="wrapper wrapp blog">
+	<header>
+		<div class="container">
+			<?php include(__DIR__ . '/../common/header.php'); ?>
+		</div>
+	</header>
+	<div class="main">
+		<div class="container">
+			<?php
+			$aBreadCrumbs[0] = ['url' => Hl::url('blog'), 'name' => $aAttrs[6700]['name']];
+			if (isset($curRubric))
+				$aBreadCrumbs[1] = ['url' => Hl::url('blog/-' . $curRubric), 'name' => $aAttrs[$curRubric]['name']];
+			include(__DIR__ . '/../common/breadcrumbs.php');
+			?>
+		</div>
+		<div class="blog_nav">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+						<div class="nav_menu">
+							<ul>
+								<li>
+									<a href="<?= Hl::url('blog/-6701') ?>"><?= $aAttrs[6701]['name'] ?></a>
+								</li>
+								<?php foreach ($aRubrics as $attr) { ?>
+									<li>
+										<a href="<?= Hl::url('blog/-' . $attr) ?>"><?= $aAttrs[$attr]['name'] ?></a>
+									</li>
+								<?php } ?>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+						<ul class="soc_wrap_head">
+							<li class="wr-search">
+								<div class="box clearfix">
+									<div class="container-2">
+										<span class="icon"><i
+												class="fa fa-search"></i></span>
+										<input type="search" id="search"
+										       placeholder="Search..."
+										       oninput="blogChange(this)"
+										/>
+									</div>
+								</div>
+							</li>
+              <?php
+                $qSocials = HT::sel('pictures',['user_id'=>3,'attr_id'=>10,'obj_id'=>6500,]);
+                foreach ($qSocials as $s) {
+                  echo '<li><a href="'.$s['note'.Hl::$pstfx].
+                       '" class="'.$s['alt'].'"><i class="'.$s['path'].
+                       '"aria-hidden="true"></i></a></li>';
+                } ?>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<section>
+			<div class="container">
+				<div class="news-block">
+					<div class="row">
+
+						<div class="col-md-<?=isset($curRubric)?12:9?> col-xs-12">
+							<div class="last-publication">
+								<div class="publication-head clearfix">
+									<div class="clock-wrap"><img
+											src="/public/src/images/clock.png"
+											alt=""></div>
+									<h3><?= $aAttrs[(isset($curRubric)) ? $curRubric : 6701]['name'] ?></h3>
+								</div>
+								<div class="publication-wrap">
+									<div class="row" id="publication-row">
+										<?php
+										$iBigBlog = 6;
+										foreach ($itemsBlog['all'] as $kb => $vb) {
+											$iBigBlog--;
+											if ($iBigBlog < 0) break;
+											?>
+											<div class="col-md-<?=isset($curRubric)?3:4?>">
+												<div class="post-item">
+													<div class="img_wrap">
+														<img
+															src="<?=Pictures::pictSizeN($vb['picture'],260)?>"
+															class="img-responsive"
+															alt="">
+													</div>
+													<div class="info_wrap">
+														<div class="row">
+															<div
+																class="col-xs-8 no-padding-right">
+																<div
+																	class="tags-info">
+																	<?= $aAttrs[$vb['attr_id']]['name'] ?>
+																</div>
+															</div>
+															<div
+																class="col-xs-4">
+																<time
+																	datetime=""><?= Hl::df($vb['created']) ?></time>
+															</div>
+															<div
+																class="col-xs-12">
+																<h3>
+																	<a href="<?= Hl::url('/blog/' . $kb) ?>">
+																		<?= $vb['name'] ?>
+																	</a>
+																</h3>
+																<p><?= $vb['small_note'] ?></p>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										<?php } ?>
+
+									</div>
+								</div>
+								<button class="publication-btn center-block"
+								        onclick="window.location='<?= Hl::url('blog/-6701') ?>'">
+									<?= Hl::$t->_('Show more') ?>
+								</button>
+							</div>
+						</div>
+
+						<?php if (!isset($curRubric)) { ?>
+							<div class="col-md-3 col-xs-12">
+								<div class="preview">
+									<div class="wrap-news-block-tabs">
+										<!-- Nav tabs -->
+										<ul class="nav nav-tabs" role="tablist">
+											<li role="presentation"
+											    class="active"><a href="#tabs-news"
+											                      aria-controls="news"
+											                      role="tab"
+											                      data-toggle="tab"><?= Hl::$t->_('News') ?></a>
+											</li>
+											<li role="presentation"><a
+													href="#tabs-tags"
+													aria-controls="tags"
+													role="tab"
+													data-toggle="tab"><?= Hl::$t->_('Tags') ?></a>
+                        <?php
+                        $qTagLinks = HT::sel('tag_links',[
+                          'query'=>1,
+                          'select'=>'tag_id',
+                          'where'=>'attr_id >= 6700 AND attr_id < 6800',
+                        ]);
+                        $qTags = HT::sel('tags',
+                          [ 'select' => 'name'.Hl::$pstfx.' name',
+                            'where'=> 'id in ('.$qTagLinks['query'].')']);
+                        echo '<!-- ';
+                        foreach ($qTags as $t)
+                          echo $t['name'].' ';
+                        echo ' -->';
+                        ?>
+											</li>
+											<li role="presentation"><a
+													href="#tabs-comments"
+													aria-controls="comments"
+													role="tab"
+													data-toggle="tab"><?= Hl::$t->_('Comments') ?></a>
+                        <?php
+                        $qFeeds = HT::sel('feedbacks',
+                          [ 'select' => 'user_id,note'.Hl::$pstfx.' note',
+                            'where'=>'attr_id >= 6700 AND attr_id < 6800',
+                            'order' => 'created DESC',
+                            'limit' => 10,
+                          ]);
+                        echo '<!-- ';
+                        foreach ($qFeeds as $f)
+                          echo $f['note'].' ';
+                        echo ' -->';
+                        ?>
+											</li>
+										</ul>
+									</div>
+									<!-- Tab panes -->
+									<div class="tab-content">
+										<div role="tabpanel"
+										     class="tab-pane active" id="tabs-news">
+											<?php
+											$iStartBlog = 6;
+											foreach ($itemsBlog['all'] as $kb => $vb) {
+												$iStartBlog--;
+												if ($iStartBlog >= 0) continue;
+												?>
+												<div class="preview-item">
+													<div class="img_wrap">
+														<img
+															src="<?=Pictures::pictSizeN($vb['picture'],260)?>"
+															width="111" alt="">
+													</div>
+													<div class="info_wrap">
+														<time
+															datetime=""><?= Hl::df($vb['created']) ?></time>
+														<!--<p>--
+														<? //= $vb['name'] ?><!--</p>-->
+														<p>
+															<a href="<?= Hl::url('/blog/' . $kb) ?>">
+																<?= Hl::trimText($vb['small_note'],110)?>
+															</a>
+														</p>
+													</div>
+												</div>
+											<?php } ?>
+											<div class="read-all text-center"><a
+													href="<?= Hl::url('blog/-6701') ?>">
+													<?= Hl::$t->_('read all') ?>
+													<span><i
+															class="fa fa-angle-right"
+															aria-hidden="true"></i></span></a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						<?php } ?>
+					</div>
+				</div>
+			</div>
+		</section>
+
+    <!-- Template for search copying -->
+    <div class="col-md-4"
+         style="display:none"
+         id="elem_tmpl_search"
+    >
+      <div class="post-item">
+        <div class="img_wrap">
+          <img src="/public/src/images/2016/07/blog3_260x150.jpg" class="img-responsive" alt="">
+        </div>
+        <div class="info_wrap">
+          <div class="row">
+            <div class="col-xs-8 no-padding-right">
+              <div class="info_partition">
+                Цікаві історії</div>
+            </div>
+            <div class="col-xs-4">
+              <time class="info_date" datetime="">28.07.2016</time>
+            </div>
+            <div class="col-xs-12">
+              <h3 class="info_head">
+                <a href="/blog/24">
+                  Пригоди у Румунії</a>
+              </h3>
+              <p class="info_body">Це була надзвичайна подорож, сповнена пригод...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <?php if (!isset($curRubric)) { ?>
+			<?php foreach ($aRubrics as $curAttr) { ?>
+				<section class="tabs">
+					<div class="container border-top">
+						<div class="row">
+							<div class="wrap-tab-h3">
+								<h3><?php
+									echo $aAttrs[$curAttr]['name'] ?></h3>
+							</div>
+
+							<!-- Nav tabs -->
+
+							<div class="wrap-nav clearfix">
+
+								<ul class="nav nav-tabs" role="tablist">
+									<?php
+									foreach ($aTags[$curAttr] as $vt) { ?>
+										<li role="presentation">
+											<a role="tab" data-toggle="tab"
+											   href="#tag_<?= $vt['tag_id'] ?>"
+											   tag_id="<?= $vt['tag_id'] ?>"
+											   attr_id="<?= $curAttr ?>"
+											   panel_id="tabpanel_<?= $curAttr ?>"
+											   onclick="return tagClick(this)"
+											>
+												<?= Hl::Uc($vt['name']) ?></a>
+										</li>
+									<?php } ?>
+								</ul>
+							</div>
+              <!-- Template for copying -->
+							<div class="col-md-3 col-sm-6 col-xs-12"
+							     style="display:none"
+							     id="elem_tmpl"
+							     onclick="javascript:window.location=
+                         '<?= Hl::url('/blog') ?>">
+								<div class="item">
+									<div class="img_wrap">
+										<img
+											src="/public/src/images/tab-block-img.jpg"
+											class="img-responsive" alt="">
+									</div>
+									<div class="info_wrap">
+										<h3 class="info_head"></h3>
+										<p class="info_body"></p>
+									</div>
+								</div>
+							</div>
+							<!-- Tab panes -->
+							<div class="tab-content">
+								<div role="tabpanel" class="tab-pane active"
+								     id="tabpanel_<?= $curAttr ?>">
+									<?php
+									foreach ($itemsBlog[$curAttr] as $kb => $vb) { ?>
+										<div class="col-md-3 col-sm-6 col-xs-12"
+										     id="elem_<?= $curAttr . '_' . $kb ?>"
+										     onclick="javascript:window.location=
+											     '<?= Hl::url('/blog/' . $kb) ?>'">
+											<div class="item">
+												<div class="img_wrap">
+													<img
+														src="<?=Pictures::pictSizeN($vb['picture'],270)?>"
+														class="img-responsive"
+														alt="">
+												</div>
+												<div class="info_wrap">
+													<h3><?= $vb['name'] ?></h3>
+													<p><?= $vb['small_note'] ?></p>
+												</div>
+											</div>
+										</div>
+									<?php } ?>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</section>
+			<?php } ?>
+		<?php } ?>
+		<section class="search-tur">
+			<div class="container">
+				<?php include(__DIR__ . '/../common/search_form.php'); ?>
+			</div>
+		</section>
+	</div>
+	<footer>
+		<?php include(__DIR__ . '/../common/footer.php'); ?>
+	</footer>
+	<?php include(__DIR__ . '/../common/footer_js.php'); ?>
+	<script>
+		$('.owl-center-carousel').owlCarousel({
+			loop: true,
+			margin: 36,
+			nav: true,
+			navText: ["", ""],
+			responsive: {
+				0: {
+					items: 1
+				},
+				600: {
+					items: 3
+				},
+				1000: {
+					items: 4
+				}
+			}
+		})
+	</script>
+</body>

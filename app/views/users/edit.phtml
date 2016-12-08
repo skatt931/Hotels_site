@@ -1,0 +1,189 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+?>
+
+<div class="row">
+    <nav>
+        <ul class="pager">
+            <li class="previous"><?php echo $this->tag->linkTo(array("users", "Back")) ?></li>
+        </ul>
+    </nav>
+</div>
+
+<div class="page-header">
+    <h1>
+        Edit users
+    </h1>
+</div>
+
+<?php echo $this->getContent(); ?>
+
+<?php
+    echo $this->tag->form(
+        array(
+            "users/save",
+            "autocomplete" => "off",
+            "class" => "form-horizontal"
+        )
+    );
+?>
+
+<div class="form-group">
+    <label for="fieldName" class="col-sm-2 control-label">Name</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("name", "size" => 30, "class" => "form-control", "id" => "fieldName")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldEmail" class="col-sm-2 control-label">Email</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("email", "size" => 30, "class" => "form-control", "id" => "fieldEmail")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldPassword" class="col-sm-2 control-label">Password</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("password", "size" => 30, "class" => "form-control", "id" => "fieldPassword")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFacebookId" class="col-sm-2 control-label">Facebook</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("facebook_id", "size" => 30, "class" => "form-control", "id" => "fieldFacebookId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFacebookName" class="col-sm-2 control-label">Facebook Of Name</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("facebook_name", "size" => 30, "class" => "form-control", "id" => "fieldFacebookName")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldFacebookData" class="col-sm-2 control-label">Facebook Of Data</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textArea(array("facebook_data", "cols" => 30, "rows" => 4, "class" => "form-control", "id" => "fieldFacebookData")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldLinkedinId" class="col-sm-2 control-label">Linkedin</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("linkedin_id", "type" => "number", "class" => "form-control", "id" => "fieldLinkedinId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldLinkedinName" class="col-sm-2 control-label">Linkedin Of Name</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("linkedin_name", "size" => 30, "class" => "form-control", "id" => "fieldLinkedinName")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldLinkedinData" class="col-sm-2 control-label">Linkedin Of Data</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textArea(array("linkedin_data", "cols" => 30, "rows" => 4, "class" => "form-control", "id" => "fieldLinkedinData")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldGplusId" class="col-sm-2 control-label">Gplus</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("gplus_id", "size" => 30, "class" => "form-control", "id" => "fieldGplusId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldGplusName" class="col-sm-2 control-label">Gplus Of Name</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("gplus_name", "size" => 30, "class" => "form-control", "id" => "fieldGplusName")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldGplusData" class="col-sm-2 control-label">Gplus Of Data</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textArea(array("gplus_data", "cols" => 30, "rows" => 4, "class" => "form-control", "id" => "fieldGplusData")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldTwitterId" class="col-sm-2 control-label">Twitter</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("twitter_id", "size" => 30, "class" => "form-control", "id" => "fieldTwitterId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldTwitterName" class="col-sm-2 control-label">Twitter Of Name</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("twitter_name", "size" => 30, "class" => "form-control", "id" => "fieldTwitterName")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldTwitterData" class="col-sm-2 control-label">Twitter Of Data</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textArea(array("twitter_data", "cols" => 30, "rows" => 4, "class" => "form-control", "id" => "fieldTwitterData")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldMustChangePassword" class="col-sm-2 control-label">Must Of Change Of Password</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("must_change_password", "type" => "number", "class" => "form-control", "id" => "fieldMustChangePassword")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldProfileId" class="col-sm-2 control-label">Profile</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("profile_id", "size" => 30, "class" => "form-control", "id" => "fieldProfileId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldGroupId" class="col-sm-2 control-label">Group</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("group_id", "type" => "number", "class" => "form-control", "id" => "fieldGroupId")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldBanned" class="col-sm-2 control-label">Banned</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("banned", "type" => "number", "class" => "form-control", "id" => "fieldBanned")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldSuspended" class="col-sm-2 control-label">Suspended</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("suspended", "type" => "number", "class" => "form-control", "id" => "fieldSuspended")) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldActive" class="col-sm-2 control-label">Active</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(array("active", "type" => "number", "class" => "form-control", "id" => "fieldActive")) ?>
+    </div>
+</div>
+
+
+<?php echo $this->tag->hiddenField("id") ?>
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <?php echo $this->tag->submitButton(array("Save", "class" => "btn btn-default")) ?>
+    </div>
+</div>
+
+<?php echo $this->tag->endForm(); ?>

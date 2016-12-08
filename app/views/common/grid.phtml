@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-sm-12">
+    <table id="datatable-fixed-header"
+           class="table table-striped table-bordered dataTable no-footer" role="grid"
+           aria-describedby="datatable-fixed-header_info">
+      <thead>
+      <tr>
+        <?php
+        $aFields = $aTable['name']::fields();
+        if (!is_array($aFields))
+          foreach ( $page->items[0] as $ki=>$vi )
+            $aFields[$ki] = ['label'=>$ki];
+        foreach ( $aFields as $kf => $vf )
+          if (isset($vf[ 'label' ]))
+            echo '<th>' . $vf[ 'label' ] . '</th>';
+          else
+            echo '<th>' . $kf . '</th>';
+        ?>
+      </tr>
+      </thead>
+      <tbody>
+      <?php foreach ( $page->items as $item ): ?>
+        <tr>
+          <?php
+          $aItems = get_object_vars( $item );
+          foreach ( $aFields as $k => $l )
+            echo '<td>' . $aItems[ $k ] . '</td>';
+          ?>
+        </tr>
+      <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
+</div>

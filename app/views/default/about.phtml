@@ -1,0 +1,38 @@
+<body>
+  <div class="wrapper wrapp about_us_page" id="wrapper">
+  <header>
+    <div class="container">
+      <?php include( __DIR__.'/../common/header.php' ); ?>
+    </div>
+  </header>
+  <div class="main">
+    <div class="container">
+      <?php
+        $aBreadCrumbs[0] = ['url'=>Hl::url('about'),'name'=>Hl::$t->_('About')];
+        include( __DIR__.'/../common/breadcrumbs.php' );
+      ?>
+
+      <section class="about-us-content">
+        <img src="<?=$picture?>" alt="">
+        <h2 class="text-center"><?=Hl::$t->_('About')?></h2>
+        <div class="arrow-down clearfix">
+          <div class="inner-arrow"></div>
+        </div>
+        <p><?=$text?></p>
+
+      </section>
+
+    </div>
+    <section class="search-tur">
+      <div class="container">
+        <h1><?=$prompt?></h1>
+
+        <?php require __DIR__.'/../common/search_form.php'; ?>
+      </div>
+    </section>
+  </div>
+  <footer>
+    <?php include(__DIR__.'/../common/footer.php'); ?>
+  </footer>
+  <?php include(__DIR__.'/../common/footer_js.php'); ?>
+</body>

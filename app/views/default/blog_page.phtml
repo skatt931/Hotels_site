@@ -1,0 +1,185 @@
+<body>
+<div class="wrapper wrapp blog_page">
+  <header>
+    <div class="container">
+      <?php include(__DIR__ . '/../common/header.php'); ?>
+    </div>
+  </header>
+  <div class="main">
+    <a id="post_id" style="display: none"><?= $itemBlog['id'] ?></a>
+    <a id="page_id" style="display: none">blog</a>
+    <div class="container">
+      <?php
+      $aBreadCrumbs[0] = ['url' => Hl::url('blog'), 'name' => $aAttrs[6700]['name']];
+      $aBreadCrumbs[1] = ['url' => Hl::url('blog/-' . $itemBlog['attr_id']),
+        'name' => $aAttrs[$itemBlog['attr_id']]['name']];
+      $aBreadCrumbs[2] = ['url' => Hl::url('blog'), 'name' => $itemBlog['name']];
+      include(__DIR__ . '/../common/breadcrumbs.php');
+      ?>
+    </div>
+    <section class="recreation-tur">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-10 col-sm-10 col-xs-12">
+            <h1><?= $itemBlog['name'] ?></h1>
+            <h4><a href="<?= Hl::url('blog/-' . $itemBlog['attr_id']) ?>">
+                <?= $aAttrs[$itemBlog['attr_id']]['name'] ?><a></a></h4>
+            <div class="row">
+              <div class="author">
+                <div class="col-md-2 col-sm-2 col-xs-12">
+                  <div class="author_img">
+                    <img src="<?= Pictures::pictSizeN($userData['picture'], 150) ?>" alt="author">
+                  </div>
+                </div>
+                <div class="col-md-10 col-sm-10 col-xs-12">
+                  <div class="author_info">
+                    <p class="author_name"><?= $userData['name'] . ' ' . $userData['surname'] ?></p>
+                    <p class="review">“<?= $itemBlog['small_note'] ?></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="post">
+              <div class="post_img">
+                <img src="<?= Pictures::pictSizeN($itemBlog['picture'], 980) ?>?>" alt="post_img">
+              </div>
+              <div class="post_text">
+                <p><?= $itemBlog['note'] ?></p>
+              </div>
+            </div>
+            <div class="comments_block">
+              <div class="comments_header">
+                <p class="pull-left"><span class="icon-chat-bubblel"></span>
+                  <?= Hl::$t->_('Comments') ?> <span>(<?= count($itemFeeds) ?>)</span></p>
+                <ul class="pull-right">
+                  <?php
+                  $qSocials = HT::sel('pictures', ['user_id' => 3, 'attr_id' => 10, 'obj_id' => 6500,]);
+                  foreach ($qSocials as $s) {
+                    $aBg = explode('-', $s['path']);
+                    echo '<li  class="' . $aBg[1] . '_bg"><a href="' . $s['note' . Hl::$pstfx] .
+                      '" class="' . $s['alt'] . '"><i class="' . $s['path'] .
+                      '"aria-hidden="true"></i></a></li>';
+                  } ?>
+                </ul>
+                <p class="pull-right">
+                  <span class="icon-redo"></span>
+                  <?= Hl::$t->_('Share') ?>
+                </p>
+              </div>
+              <div class="comments">
+                <?php foreach ($itemFeeds as $f) { ?>
+                  <div class="comments-item">
+                    <div class="comments_img">
+                      <img src="<?= Pictures::pictSizeN($f['picture'], 60) ?>" alt="">
+                    </div>
+                    <div class="comments_message">
+                      <div class="date"><?= Hl::df($f['created']) ?></div>
+                      <div class="user_name"><?= $f['name'] . ' ' . $f['surname'] ?></div>
+                      <div class="message"><?= $f['note'] ?></div>
+                    </div>
+                  </div>
+                <?php } ?>
+                <div class="comments-item comments_form">
+                  <div class="comments_img">
+                    <img src="<?= Pictures::pictSizeN(Hl::$user['picture'], 60) ?>" alt="comments_img">
+                  </div>
+                  <div class="comments_message">
+                    <form action="#" name="message">
+                      <textarea name="message" id="" cols="100" rows="3" placeholder="Ваш коментар"></textarea>
+                      <p class="comment-error"></p>
+                      <p>For comment please log into with one of your Social Networks</p>
+
+                      <fb:login-button scope="public_profile,email" onlogin="checkLoginState();" data-auto-logout-link="true">
+                      </fb:login-button>
+                      <div id="status">
+                      </div>
+                      <button class="public_btn center-block"><?= Hl::$t->_('Public') ?></button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2 col-sm-2 col-xs-12">
+            <div class="free_book_block">
+              <div class="banner">
+                <img class="img-responsive" src="/public/src/images/banner.png" alt="banner">
+              </div>
+              <div class="book_form">
+                <div class="center-block block_header">
+                  <figure class="pull-left">
+                    <img src="/public/src/images/gift.png" alt="icon">
+                  </figure>
+                  <p> Шпаргалки туриста</p>
+                </div>
+                <div class="clearfix"></div>
+                <form>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Ваше ім`я">
+                  </div>
+                  <div class="form-group">
+                    <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Ваш e-mail">
+                  </div>
+                  <button type="submit" class="btn public_btn">Отримати</button>
+                </form>
+              </div>
+            </div>
+            <?php include(__DIR__ . "/../common/actions_right.php"); ?>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="search-tur">
+      <div class="container">
+        <?php include(__DIR__ . '/../common/search_form.php'); ?>
+      </div>
+    </section>
+    <section class="recreation-tur">
+      <div class="container">
+        <div class="row">
+          <h3><?= Hl::$t->_('Additional propose') ?></h3>
+          <div id="best_purpose" class="owl-carousel owl-theme owl-center-carousel">
+            <?php include(__DIR__ . "/../common/brick_same.php"); ?>
+            <div class="item wrap_block">
+              <div class="item_header">
+                <p>Royal VIP Grand Hotel & Spa Rumunia</p>
+                <div class="price">
+                  <p class="new_price">24000 </p>
+                  <span class="new_price">грн./нічь</span>
+                </div>
+              </div>
+              <a href="#" class="img_wrap">
+                <img class="img-responsive" src="/public/src/images/room.jpg" alt="item">
+              </a>
+              <div class="border">
+                <div class="info_block">
+                  <p>0.1 km до бювету</p>
+                  <p>0.15 km до центру</p>
+                </div>
+                <div class="add_block pull-right">
+                  <div class="stars">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <?php include(__DIR__ . '/../default/block_b_sec_10.php'); ?>
+  </div>
+</div>
+
+<footer>
+  <?php include(__DIR__ . '/../common/footer.php'); ?>
+</footer>
+<?php include(__DIR__ . '/../common/footer_js.php'); ?>
+</body>
